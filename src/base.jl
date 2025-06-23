@@ -10,10 +10,10 @@ function Base.:/(x::SparseArray, a::Number)
     return mul!(similar(x, Base.promote_eltypeof(a, x)), x, inv(a))
 end
 function Base.:+(x::SparseArray, y::SparseArray)
-    return (T = Base.promote_eltypeof(x, y); axpy!(+one(T), y, copy!(similar(x, T), x)))
+    return (T=Base.promote_eltypeof(x, y); axpy!(+one(T), y, copy!(similar(x, T), x)))
 end
 function Base.:-(x::SparseArray, y::SparseArray)
-    return (T = Base.promote_eltypeof(x, y); axpy!(-one(T), y, copy!(similar(x, T), x)))
+    return (T=Base.promote_eltypeof(x, y); axpy!(-one(T), y, copy!(similar(x, T), x)))
 end
 
 Base.:-(x::SparseArray) = LinearAlgebra.lmul!(-one(eltype(x)), copy(x))
