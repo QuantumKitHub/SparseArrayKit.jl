@@ -1,4 +1,4 @@
-<img src="https://github.com/Jutho/SparseArrayKit.jl/blob/master/docs/src/assets/logo.svg" width="150">
+<img src="https://github.com/QuantumKitHub/SparseArrayKit.jl/blob/main/docs/src/assets/logo.svg" width="150">
 
 # SparseArrayKit.jl
 
@@ -6,14 +6,14 @@
 |:----------------:|:------------:|:---------------------:|:--------------|
 | [![CI][ci-img]][ci-url] | [![Codecov][codecov-img]][codecov-url] | [![Aqua QA][aqua-img]][aqua-url] | [![SparseArrayKit Downloads][genie-img]][genie-url] |
 
-[github-img]: https://github.com/Jutho/SparseArrayKit.jl/workflows/CI/badge.svg
-[github-url]: https://github.com/Jutho/SparseArrayKit.jl/actions?query=workflow%3ACI
+[github-img]: https://github.com/QuantumKitHub/SparseArrayKit.jl/workflows/CI/badge.svg
+[github-url]: https://github.com/QuantumKitHub/SparseArrayKit.jl/actions?query=workflow%3ACI
 
-[ci-img]: https://github.com/Jutho/SparseArrayKit.jl/workflows/CI/badge.svg
-[ci-url]: https://github.com/Jutho/SparseArrayKit.jl/actions?query=workflow%3ACI
+[ci-img]: https://github.com/QuantumKitHub/SparseArrayKit.jl/workflows/CI/badge.svg
+[ci-url]: https://github.com/QuantumKitHub/SparseArrayKit.jl/actions?query=workflow%3ACI
 
-[codecov-img]: https://codecov.io/gh/Jutho/SparseArrayKit.jl/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/Jutho/SparseArrayKit.jl
+[codecov-img]: https://codecov.io/gh/QuantumKitHub/SparseArrayKit.jl/branch/main/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/QuantumKitHub/SparseArrayKit.jl
 
 [aqua-img]: https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg
 [aqua-url]: https://github.com/JuliaTesting/Aqua.jl
