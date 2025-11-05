@@ -7,6 +7,7 @@ using TupleTools
 
 export SparseArray
 export nonzero_pairs, nonzero_keys, nonzero_values, nonzero_length
+export reindexdims, reindexdims!
 
 include("sparsearray.jl")
 include("base.jl")

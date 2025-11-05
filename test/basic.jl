@@ -1,6 +1,8 @@
 module BasicTests
+
 using SparseArrayKit
 using Test, TestExtras, LinearAlgebra, Random
+using TupleTools
 
 #=
 generate a whole bunch of random contractions, compare with the dense result
@@ -94,6 +96,21 @@ end
     @test SparseArray(I, (5, 5)) == I
     @test SparseArray{Float64}(I, (5, 5)) == I
     @test size(SparseArray(I, 3, 8)) == (3, 8)
+end
+
+@timedtestset "Index manipulations" begin
+    dims = (2, 3, 4)
+    A = randn_sparse(Float64, dims)
+    @test @constinferred(reindexdims(A, (2, 1, 3))) == permutedims(A, (2, 1, 3))
+
+    A_expanded = @constinferred reindexdims(A, (1, 1, 2, 3))
+    @test size(A_expanded) == TupleTools.getindices(size(A), (1, 1, 2, 3))
+    @test norm(A_expanded) ≈ norm(A)
+    @test reindexdims(A_expanded, (1, 3, 4)) == A
+
+    A_reduced = @constinferred reindexdims(A, (1, 2))
+    @test size(A_reduced) == TupleTools.getindices(size(A), (1, 2))
+    @test Array(A_reduced) ≈ sum(Array(A); dims = 3)
 end
 
 end
