@@ -10,10 +10,10 @@ function Base.:/(x::SparseArray, a::Number)
     return mul!(similar(x, Base.promote_eltypeof(a, x)), x, inv(a))
 end
 function Base.:+(x::SparseArray, y::SparseArray)
-    return (T=Base.promote_eltypeof(x, y); axpy!(+one(T), y, copy!(similar(x, T), x)))
+    return (T = Base.promote_eltypeof(x, y); axpy!(+one(T), y, copy!(similar(x, T), x)))
 end
 function Base.:-(x::SparseArray, y::SparseArray)
-    return (T=Base.promote_eltypeof(x, y); axpy!(-one(T), y, copy!(similar(x, T), x)))
+    return (T = Base.promote_eltypeof(x, y); axpy!(-one(T), y, copy!(similar(x, T), x)))
 end
 
 Base.:-(x::SparseArray) = LinearAlgebra.lmul!(-one(eltype(x)), copy(x))
@@ -21,7 +21,7 @@ Base.:-(x::SparseArray) = LinearAlgebra.lmul!(-one(eltype(x)), copy(x))
 Base.zero(x::SparseArray) = similar(x)
 Base.iszero(x::SparseArray) = nonzero_length(x) == 0
 
-function Base.one(x::SparseArray{<:Any,2})
+function Base.one(x::SparseArray{<:Any, 2})
     m, n = size(x)
     m == n ||
         throw(DimensionMismatch("multiplicative identity defined only for square matrices"))

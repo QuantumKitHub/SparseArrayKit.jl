@@ -5,7 +5,7 @@ using TensorOperations
 #=
 generate a whole bunch of random contractions, compare with the dense result
 =#
-function randn_sparse(T::Type{<:Number}, sz::Dims, p=0.5)
+function randn_sparse(T::Type{<:Number}, sz::Dims, p = 0.5)
     a = SparseArray{T}(undef, sz)
     for I in keys(a)
         if rand() < p
@@ -25,16 +25,22 @@ end
     for i in 1:NUM_TESTS
         contracted_indices = repeat(collect(1:rand(1:MAX_CONTRACTED_INDICES)), 2)
         open_indices = collect(1:rand(1:MAX_OPEN_INDICES))
-        dimensions = [repeat(rand(1:MAX_DIM, Int(length(contracted_indices) / 2)), 2);
-                      rand(1:MAX_DIM, length(open_indices))]
+        dimensions = [
+            repeat(rand(1:MAX_DIM, Int(length(contracted_indices) / 2)), 2);
+            rand(1:MAX_DIM, length(open_indices))
+        ]
 
         #generate a random tensor network contraction
         tensors = SparseArray[]
         indices = Vector{Int64}[]
         conjlist = Bool[]
         while !isempty(contracted_indices) || !isempty(open_indices)
-            num_inds = rand(1:min(MAX_IND_PER_TENS,
-                                  length(contracted_indices) + length(open_indices)))
+            num_inds = rand(
+                1:min(
+                    MAX_IND_PER_TENS,
+                    length(contracted_indices) + length(open_indices)
+                )
+            )
 
             cur_inds = Int64[]
             cur_dims = Int64[]

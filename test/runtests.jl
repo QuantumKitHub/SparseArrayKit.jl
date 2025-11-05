@@ -11,8 +11,8 @@ println("==========================")
 include("contractions.jl")
 
 module AquaSparseArrayKit
-using SparseArrayKit, Aqua, Test
-@testset "Aqua" verbose = true begin
-    Aqua.test_all(SparseArrayKit)
-end
+    using SparseArrayKit, Aqua, Test
+    @testset "Aqua" verbose = true begin
+        Aqua.test_all(SparseArrayKit)
+    end
 end
