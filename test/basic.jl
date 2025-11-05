@@ -5,7 +5,7 @@ using Test, TestExtras, LinearAlgebra, Random
 #=
 generate a whole bunch of random contractions, compare with the dense result
 =#
-function randn_sparse(T::Type{<:Number}, sz::Dims, p=0.5)
+function randn_sparse(T::Type{<:Number}, sz::Dims, p = 0.5)
     a = SparseArray{T}(undef, sz)
     for I in keys(a)
         if rand() < p

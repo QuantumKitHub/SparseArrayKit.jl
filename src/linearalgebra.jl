@@ -63,33 +63,34 @@ function LinearAlgebra.axpy!(α::Number, x::SparseArray, y::SparseArray)
     return y
 end
 
-function LinearAlgebra.norm(x::SparseArray, p::Real=2)
+function LinearAlgebra.norm(x::SparseArray, p::Real = 2)
     return norm(nonzero_values(x), p)
 end
 LinearAlgebra.dot(x::SparseArray, y::SparseArray) = inner(x, y)
 
 # matrix functions
-const SV{T} = SparseArray{T,1}
-const SM{T} = SparseArray{T,2}
-const ASM{T} = Union{SparseArray{T,2},
-                     Transpose{T,<:SparseArray{T,2}},
-                     Adjoint{T,<:SparseArray{T,2}}}
+const SV{T} = SparseArray{T, 1}
+const SM{T} = SparseArray{T, 2}
+const ASM{T} = Union{SparseArray{T, 2}, Transpose{T, <:SparseArray{T, 2}}, Adjoint{T, <:SparseArray{T, 2}}}
 
 LinearAlgebra.mul!(C::SM, A::ASM, B::ASM) = mul!(C, A, B, one(eltype(C)), zero(eltype(C)))
 function LinearAlgebra.mul!(C::SM, A::ASM, B::ASM, α::Number, β::Number)
     conjA = A isa Adjoint
     conjB = B isa Adjoint
-    oindA = A isa Union{Adjoint,Transpose} ? (2,) : (1,)
-    cindA = A isa Union{Adjoint,Transpose} ? (1,) : (2,)
-    oindB = B isa Union{Adjoint,Transpose} ? (1,) : (2,)
-    cindB = B isa Union{Adjoint,Transpose} ? (2,) : (1,)
+    oindA = A isa Union{Adjoint, Transpose} ? (2,) : (1,)
+    cindA = A isa Union{Adjoint, Transpose} ? (1,) : (2,)
+    oindB = B isa Union{Adjoint, Transpose} ? (1,) : (2,)
+    cindB = B isa Union{Adjoint, Transpose} ? (2,) : (1,)
 
-    AA = A isa Union{Adjoint,Transpose} ? parent(A) : A
-    BB = B isa Union{Adjoint,Transpose} ? parent(B) : B
+    AA = A isa Union{Adjoint, Transpose} ? parent(A) : A
+    BB = B isa Union{Adjoint, Transpose} ? parent(B) : B
 
-    return tensorcontract!(C, AA, (oindA, cindA), conjA, BB, (cindB, oindB), conjB,
-                           ((1, 2), ()), α,
-                           β)
+    return tensorcontract!(
+        C,
+        AA, (oindA, cindA), conjA,
+        BB, (cindB, oindB), conjB,
+        ((1, 2), ()), α, β
+    )
 end
 
 LinearAlgebra.adjoint!(C::SM, A::SM) = tensoradd!(C, A, ((2, 1), ()), true, One(), Zero())

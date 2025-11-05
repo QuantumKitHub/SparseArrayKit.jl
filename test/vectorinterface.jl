@@ -5,7 +5,7 @@ using Test, TestExtras, VectorInterface, Random
 deepcollect(x) = vcat(map(deepcollect, x)...)
 deepcollect(x::Number) = x
 
-function randn_sparse(T::Type{<:Number}, sz::Dims, p=0.5)
+function randn_sparse(T::Type{<:Number}, sz::Dims, p = 0.5)
     a = SparseArray{T}(undef, sz)
     for I in keys(a)
         if rand() < p

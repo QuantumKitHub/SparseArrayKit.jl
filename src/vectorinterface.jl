@@ -2,7 +2,7 @@
 ##################################################################
 # zerovector & zerovector!!
 #---------------------------
-function VectorInterface.zerovector(x::SparseArray, ::Type{S}) where {S<:Number}
+function VectorInterface.zerovector(x::SparseArray, ::Type{S}) where {S <: Number}
     return SparseArray{S}(undef, size(x))
 end
 VectorInterface.zerovector!(x::SparseArray) = _zero!(x)

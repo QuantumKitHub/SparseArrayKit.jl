@@ -9,16 +9,20 @@ end
 function TO.select_backend(::typeof(TO.tensortrace!), C::SparseArray, A::SparseArray)
     return SparseBackend()
 end
-function TO.select_backend(::typeof(TO.tensorcontract!),
-                           C::SparseArray, A::SparseArray, B::SparseArray)
+function TO.select_backend(
+        ::typeof(TO.tensorcontract!),
+        C::SparseArray, A::SparseArray, B::SparseArray
+    )
     return SparseBackend()
 end
 
 # Convert to `SparseArray` when forcing `SparseBackend`
-function TO.tensoradd!(C::AbstractArray,
-                       A::AbstractArray, pA::Index2Tuple, conjA::Bool,
-                       α::Number, β::Number,
-                       backend::SparseBackend, allocator=DefaultAllocator())
+function TO.tensoradd!(
+        C::AbstractArray,
+        A::AbstractArray, pA::Index2Tuple, conjA::Bool,
+        α::Number, β::Number,
+        backend::SparseBackend, allocator = DefaultAllocator()
+    )
     if C isa SparseArray
         TO.tensoradd!(C, SparseArray(A), pA, conjA, α, β, backend, allocator)
     else
@@ -29,10 +33,12 @@ function TO.tensoradd!(C::AbstractArray,
     return C
 end
 
-function TO.tensortrace!(C::AbstractArray,
-                         A::AbstractArray, p::Index2Tuple, q::Index2Tuple, conjA::Bool,
-                         α::Number, β::Number,
-                         backend::SparseBackend, allocator=DefaultAllocator())
+function TO.tensortrace!(
+        C::AbstractArray,
+        A::AbstractArray, p::Index2Tuple, q::Index2Tuple, conjA::Bool,
+        α::Number, β::Number,
+        backend::SparseBackend, allocator = DefaultAllocator()
+    )
     if C isa SparseArray
         TO.tensortrace!(C, SparseArray(A), p, q, conjA, α, β, backend, allocator)
     else
@@ -43,19 +49,29 @@ function TO.tensortrace!(C::AbstractArray,
     return C
 end
 
-function TO.tensorcontract!(C::AbstractArray,
-                            A::AbstractArray, pA::Index2Tuple, conjA::Bool,
-                            B::AbstractArray, pB::Index2Tuple, conjB::Bool,
-                            pAB::Index2Tuple,
-                            α::Number, β::Number,
-                            backend::SparseBackend, allocator=DefaultAllocator())
+function TO.tensorcontract!(
+        C::AbstractArray,
+        A::AbstractArray, pA::Index2Tuple, conjA::Bool,
+        B::AbstractArray, pB::Index2Tuple, conjB::Bool,
+        pAB::Index2Tuple,
+        α::Number, β::Number,
+        backend::SparseBackend, allocator = DefaultAllocator()
+    )
     if C isa SparseArray
-        TO.tensorcontract!(C, SparseArray(A), pA, conjA, SparseArray(B), pB, conjB, pAB, α,
-                           β, backend, allocator)
+        TO.tensorcontract!(
+            C,
+            SparseArray(A), pA, conjA,
+            SparseArray(B), pB, conjB,
+            pAB, α, β, backend, allocator
+        )
     else
         Csparse = SparseArray(C)
-        TO.tensorcontract!(Csparse, SparseArray(A), pA, conjA, SparseArray(B), pB, conjB,
-                           pAB, α, β, backend, allocator)
+        TO.tensorcontract!(
+            Csparse,
+            SparseArray(A), pA, conjA,
+            SparseArray(B), pB, conjB,
+            pAB, α, β, backend, allocator
+        )
         copy!(C, Csparse)
     end
     return C
@@ -63,10 +79,12 @@ end
 
 # Actual SparseArray implementation of TensorOperations interface
 #-------------------------------------------------------------------------------------------
-function TO.tensoradd!(C::SparseArray,
-                       A::SparseArray, pA::Index2Tuple, conjA::Bool,
-                       α::Number, β::Number,
-                       ::SparseBackend, allocator=DefaultAllocator())
+function TO.tensoradd!(
+        C::SparseArray,
+        A::SparseArray, pA::Index2Tuple, conjA::Bool,
+        α::Number, β::Number,
+        ::SparseBackend, allocator = DefaultAllocator()
+    )
     TO.argcheck_tensoradd(C, A, pA)
     TO.dimcheck_tensoradd(C, A, pA)
 
@@ -80,10 +98,12 @@ function TO.tensoradd!(C::SparseArray,
     return C
 end
 
-function TO.tensortrace!(C::SparseArray,
-                         A::SparseArray, p::Index2Tuple, q::Index2Tuple, conjA::Bool,
-                         α::Number, β::Number,
-                         ::SparseBackend, allocator=DefaultAllocator())
+function TO.tensortrace!(
+        C::SparseArray,
+        A::SparseArray, p::Index2Tuple, q::Index2Tuple, conjA::Bool,
+        α::Number, β::Number,
+        ::SparseBackend, allocator = DefaultAllocator()
+    )
     TO.argcheck_tensortrace(C, A, p, q)
     TO.dimcheck_tensortrace(C, A, p, q)
 
@@ -101,22 +121,28 @@ function TO.tensortrace!(C::SparseArray,
     return C
 end
 
-function TO.tensorcontract!(C::SparseArray,
-                            A::SparseArray, pA::Index2Tuple, conjA::Bool,
-                            B::SparseArray, pB::Index2Tuple, conjB::Bool,
-                            pAB::Index2Tuple,
-                            α::Number, β::Number,
-                            ::SparseBackend, allocator=DefaultAllocator())
+function TO.tensorcontract!(
+        C::SparseArray,
+        A::SparseArray, pA::Index2Tuple, conjA::Bool,
+        B::SparseArray, pB::Index2Tuple, conjB::Bool,
+        pAB::Index2Tuple,
+        α::Number, β::Number,
+        ::SparseBackend, allocator = DefaultAllocator()
+    )
     TO.argcheck_tensorcontract(C, A, pA, B, pB, pAB)
     TO.dimcheck_tensorcontract(C, A, pA, B, pB, pAB)
 
     scale!(C, β)
     pAB_lin = linearize(pAB)
 
-    keysA = sort!(collect(nonzero_keys(A));
-                  by=IA -> CartesianIndex(TupleTools.getindices(IA.I, pA[2])))
-    keysB = sort!(collect(nonzero_keys(B));
-                  by=IB -> CartesianIndex(TupleTools.getindices(IB.I, pB[1])))
+    keysA = sort!(
+        collect(nonzero_keys(A));
+        by = IA -> CartesianIndex(TupleTools.getindices(IA.I, pA[2]))
+    )
+    keysB = sort!(
+        collect(nonzero_keys(B));
+        by = IB -> CartesianIndex(TupleTools.getindices(IB.I, pB[1]))
+    )
 
     iA = iB = 1
     @inbounds while iA <= length(keysA) && iB <= length(keysB)
@@ -188,12 +214,14 @@ function TO.tensorcontract!(C::SparseArray,
 end
 
 function TO.tensoradd_type(TC, ::SparseArray, pA::Index2Tuple, ::Bool)
-    return SparseArray{TC,TO.numind(pA)}
+    return SparseArray{TC, TO.numind(pA)}
 end
 
-function TO.tensorcontract_type(TC,
-                                ::SparseArray, pA::Index2Tuple, conjA::Bool,
-                                ::SparseArray, pB::Index2Tuple, conjB::Bool,
-                                pAB::Index2Tuple)
-    return SparseArray{TC,TO.numind(pAB)}
+function TO.tensorcontract_type(
+        TC,
+        ::SparseArray, pA::Index2Tuple, conjA::Bool,
+        ::SparseArray, pB::Index2Tuple, conjB::Bool,
+        pAB::Index2Tuple
+    )
+    return SparseArray{TC, TO.numind(pAB)}
 end
