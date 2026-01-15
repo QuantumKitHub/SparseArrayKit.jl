@@ -69,3 +69,27 @@ function Base.reshape(parent::SparseArray{T}, dims::Dims) where {T}
     end
     return child
 end
+
+@doc """
+    reindexdims(A, p)
+    reindexdims!(C, A, p)
+
+Reindex the dimensions (axes) of array `A`. `p` is a tuple of integers specifying which indices are selected.
+This is similar to `permutedims(!)`, but also allows both repeated and omitted integers.
+The former boils down to a broadcasting along the diagonal, i.e. `C[i, i, j, k, ...] = A[i, j, k, ...]`,
+while the latter signifies a reduction over the omitted index, i.e. `C[j, k, ...] = ∑_i A[i, j, k, ...]`.
+""" reindexdims, reindexdims!
+
+function reindexdims(A::SparseArray, p::IndexTuple)
+    C = similar(A, TupleTools.getindices(size(A), p))
+    return reindexdims!(C, A, p)
+end
+function reindexdims!(C::SparseArray{T, N}, A::SparseArray, p::IndexTuple{N}) where {T, N}
+    _zero!(C)
+    _sizehint!(C, nonzero_length(A))
+    for (IA, vA) in nonzero_pairs(A)
+        IC = CartesianIndex(TupleTools.getindices(IA.I, p))
+        increaseindex!(C, vA, IC)
+    end
+    return C
+end
