@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   test:
-    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }}
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     permissions: # needed to allow julia-actions/cache to proactively delete old caches that it has created
@@ -32,14 +32,13 @@ jobs:
           - ubuntu-latest
           - macOS-latest
           - windows-latest
-        arch:
-          - x64
     steps:
       - uses: actions/checkout@v6
       - uses: julia-actions/setup-julia@v3
         with:
           version: ${{ matrix.version }}
-          arch: ${{ matrix.arch }}
+          # arch omitted: defaults to the runner's native arch
+          # (macOS-latest is Apple Silicon / aarch64)
       - uses: julia-actions/cache@v3
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
@@ -51,7 +50,7 @@ jobs:
           fail_ci_if_error: false
   test-nightly:
     needs: test
-    name: Julia nightly - ${{ matrix.os }} - ${{ matrix.arch }}
+    name: Julia nightly - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     permissions: # needed to allow julia-actions/cache to proactively delete old caches that it has created
@@ -65,14 +64,11 @@ jobs:
           - 'nightly'
         os:
           - ubuntu-latest
-        arch:
-          - x64
     steps:
       - uses: actions/checkout@v6
       - uses: julia-actions/setup-julia@v3
         with:
           version: ${{ matrix.version }}
-          arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v3
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
